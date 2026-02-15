@@ -2,6 +2,8 @@
 
 A native macOS developer utility app with 34 tools. Built with Next.js, Tailwind CSS, and Tauri. Everything runs client-side — no data ever leaves your machine.
 
+![ToolKit.dev Screenshot](screenshot.png)
+
 ## Tools
 
 | Encoders & Decoders | Formatters & Minifiers | Generators |

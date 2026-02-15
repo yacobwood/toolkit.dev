@@ -5,3 +5,4 @@ src-tauri/target/
 *.tsbuildinfo
 .DS_Store
 node_modules
+.claude/

@@ -7,15 +7,18 @@ export default function JsonFormatter() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const format = () => {
     try {
       const parsed = JSON.parse(input);
       setOutput(JSON.stringify(parsed, null, 2));
       setError("");
+      setSuccess("");
     } catch (e) {
       setError((e as Error).message);
       setOutput("");
+      setSuccess("");
     }
   };
 
@@ -24,9 +27,11 @@ export default function JsonFormatter() {
       const parsed = JSON.parse(input);
       setOutput(JSON.stringify(parsed));
       setError("");
+      setSuccess("");
     } catch (e) {
       setError((e as Error).message);
       setOutput("");
+      setSuccess("");
     }
   };
 
@@ -35,10 +40,12 @@ export default function JsonFormatter() {
       JSON.parse(input);
       setOutput("");
       setError("");
-      alert("Valid JSON!");
+      setSuccess("Valid JSON!");
+      setTimeout(() => setSuccess(""), 3000);
     } catch (e) {
       setError((e as Error).message);
       setOutput("");
+      setSuccess("");
     }
   };
 
@@ -102,6 +109,12 @@ export default function JsonFormatter() {
       {error && (
         <div className="mt-4 p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm font-mono">
           {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="mt-4 p-3 rounded-lg bg-success/10 border border-success/20 text-success text-sm font-mono">
+          {success}
         </div>
       )}
     </div>

@@ -24,20 +24,9 @@ function encodeEntities(text: string): string {
 }
 
 function decodeEntities(text: string): string {
-  // Named entities
-  let result = text;
-  for (const [entity, char] of Object.entries(REVERSE_MAP)) {
-    result = result.split(entity).join(char);
-  }
-  // Numeric entities (decimal)
-  result = result.replace(/&#(\d+);/g, (_m, code) =>
-    String.fromCharCode(parseInt(code))
-  );
-  // Numeric entities (hex)
-  result = result.replace(/&#x([a-fA-F0-9]+);/g, (_m, code) =>
-    String.fromCharCode(parseInt(code, 16))
-  );
-  return result;
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = text;
+  return textarea.value;
 }
 
 export default function HtmlEntityEncoder() {

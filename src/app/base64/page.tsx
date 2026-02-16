@@ -18,9 +18,16 @@ export default function Base64Tool() {
     }
     try {
       if (currentMode === "encode") {
-        setOutput(btoa(unescape(encodeURIComponent(value))));
+        const bytes = new TextEncoder().encode(value);
+        const binary = Array.from(bytes, (b) => String.fromCharCode(b)).join("");
+        setOutput(btoa(binary));
       } else {
-        setOutput(decodeURIComponent(escape(atob(value))));
+        const binary = atob(value);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        setOutput(new TextDecoder().decode(bytes));
       }
     } catch {
       setError(

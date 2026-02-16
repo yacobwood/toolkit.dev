@@ -3,6 +3,12 @@
 import { useState, useMemo } from "react";
 import CopyButton from "@/components/CopyButton";
 
+function sanitizeUrl(url: string): string {
+  const trimmed = url.trim();
+  if (/^(https?:\/\/|mailto:|\/|#)/i.test(trimmed)) return trimmed;
+  return "#";
+}
+
 function parseMarkdown(md: string): string {
   let html = md;
 
@@ -30,16 +36,16 @@ function parseMarkdown(md: string): string {
   html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
   html = html.replace(/\*(.+?)\*/g, "<em>$1</em>");
 
+  // Images (must come before links to avoid ![alt](url) matching as link)
+  html = html.replace(
+    /!\[([^\]]*)\]\(([^)]+)\)/g,
+    (_m, alt, url) => `<img src="${sanitizeUrl(url)}" alt="${alt}" class="max-w-full rounded-lg my-2" />`
+  );
+
   // Links
   html = html.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
-    '<a href="$2" class="text-accent hover:underline" target="_blank" rel="noopener">$1</a>'
-  );
-
-  // Images
-  html = html.replace(
-    /!\[([^\]]*)\]\(([^)]+)\)/g,
-    '<img src="$2" alt="$1" class="max-w-full rounded-lg my-2" />'
+    (_m, text, url) => `<a href="${sanitizeUrl(url)}" class="text-accent hover:underline" target="_blank" rel="noopener">${text}</a>`
   );
 
   // Blockquotes

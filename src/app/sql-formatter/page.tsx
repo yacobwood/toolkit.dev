@@ -24,18 +24,21 @@ const NEWLINE_BEFORE = [
 
 const INDENT_AFTER = ["SELECT", "SET", "VALUES", "WITH"];
 
+const SORTED_KEYWORDS = [...KEYWORDS].sort((a, b) => b.length - a.length);
+const SORTED_NEWLINE_BEFORE = [...NEWLINE_BEFORE].sort((a, b) => b.length - a.length);
+
 function formatSQL(sql: string): string {
   // Normalize whitespace
   let formatted = sql.replace(/\s+/g, " ").trim();
 
   // Uppercase keywords
-  for (const kw of KEYWORDS.sort((a, b) => b.length - a.length)) {
+  for (const kw of SORTED_KEYWORDS) {
     const regex = new RegExp(`\\b${kw.replace(/\s+/g, "\\s+")}\\b`, "gi");
     formatted = formatted.replace(regex, kw);
   }
 
   // Add newlines before certain keywords
-  for (const kw of NEWLINE_BEFORE.sort((a, b) => b.length - a.length)) {
+  for (const kw of SORTED_NEWLINE_BEFORE) {
     const regex = new RegExp(`\\s+${kw.replace(/\s+/g, "\\s+")}\\b`, "g");
     formatted = formatted.replace(regex, `\n${kw}`);
   }

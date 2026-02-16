@@ -19,6 +19,10 @@ export default function RegexTester() {
       setError("");
       return [];
     }
+    if (testString.length > 100_000) {
+      setError("Test string too long (max 100,000 characters)");
+      return [];
+    }
     try {
       const regex = new RegExp(pattern, flags);
       setError("");
@@ -26,6 +30,7 @@ export default function RegexTester() {
 
       if (flags.includes("g")) {
         let match;
+        let iterations = 0;
         while ((match = regex.exec(testString)) !== null) {
           results.push({
             value: match[0],
@@ -33,6 +38,10 @@ export default function RegexTester() {
             groups: match.slice(1),
           });
           if (!match[0]) regex.lastIndex++;
+          if (++iterations >= 10_000) {
+            setError("Stopped after 10,000 matches (limit reached)");
+            break;
+          }
         }
       } else {
         const match = regex.exec(testString);

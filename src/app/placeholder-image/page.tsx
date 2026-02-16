@@ -24,8 +24,13 @@ export default function PlaceholderImage() {
     ctx.fillRect(0, 0, width, height);
 
     const label = text || `${width} x ${height}`;
-    const fontSize = Math.max(12, Math.min(width, height) / 8);
+    let fontSize = Math.max(12, Math.min(width, height) / 8);
     ctx.font = `${fontSize}px sans-serif`;
+    const textWidth = ctx.measureText(label).width;
+    if (textWidth > width * 0.9) {
+      fontSize = Math.max(8, fontSize * (width * 0.9) / textWidth);
+      ctx.font = `${fontSize}px sans-serif`;
+    }
     ctx.fillStyle = textColor;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";

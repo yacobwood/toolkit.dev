@@ -20,21 +20,19 @@ function textTo(text: string, mode: Mode): string {
     .join(" ");
 }
 
-function fromText(encoded: string, mode: Mode): string {
+function fromText(encoded: string, mode: Mode): { result: string; error: string } {
+  if (!encoded.trim()) return { result: "", error: "" };
   const parts = encoded.trim().split(/\s+/);
   try {
-    return parts
-      .map((p) => {
-        switch (mode) {
-          case "binary": return String.fromCharCode(parseInt(p, 2));
-          case "ascii": return String.fromCharCode(parseInt(p, 10));
-          case "hex": return String.fromCharCode(parseInt(p, 16));
-          case "octal": return String.fromCharCode(parseInt(p, 8));
-        }
-      })
-      .join("");
-  } catch {
-    return "";
+    const base = mode === "binary" ? 2 : mode === "ascii" ? 10 : mode === "hex" ? 16 : 8;
+    const chars = parts.map((p) => {
+      const code = parseInt(p, base);
+      if (isNaN(code)) throw new Error(`Invalid ${mode} value: "${p}"`);
+      return String.fromCharCode(code);
+    });
+    return { result: chars.join(""), error: "" };
+  } catch (e) {
+    return { result: "", error: (e as Error).message };
   }
 }
 
@@ -50,7 +48,9 @@ export default function TextBinary() {
   const [mode, setMode] = useState<Mode>("binary");
   const [direction, setDirection] = useState<"encode" | "decode">("encode");
 
-  const output = direction === "encode" ? textTo(input, mode) : fromText(input, mode);
+  const decoded = direction === "decode" ? fromText(input, mode) : null;
+  const output = direction === "encode" ? textTo(input, mode) : (decoded?.result ?? "");
+  const error = decoded?.error ?? "";
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -88,6 +88,12 @@ export default function TextBinary() {
             <textarea value={output} readOnly placeholder="Result..." className="w-full h-40 p-4 rounded-lg border border-border bg-surface text-sm font-mono resize-none focus:outline-none" spellCheck={false} />
           </div>
         </div>
+
+        {error && (
+          <div className="p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm font-mono">
+            {error}
+          </div>
+        )}
       </div>
     </div>
   );

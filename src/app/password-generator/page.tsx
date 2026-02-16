@@ -77,12 +77,16 @@ export default function PasswordGenerator() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {Object.entries(options).map(([key, value]) => (
-              <button key={key} onClick={() => setOptions((prev) => ({ ...prev, [key]: !prev[key as keyof typeof prev] }))}
-                className={`px-3 py-2 text-sm font-medium rounded-lg capitalize transition-colors ${value ? "bg-accent text-white" : "border border-border bg-surface hover:bg-surface-hover"}`}>
-                {key}
-              </button>
-            ))}
+            {Object.entries(options).map(([optKey, value]) => {
+              const enabledCount = Object.values(options).filter(Boolean).length;
+              const isLastEnabled = value && enabledCount <= 1;
+              return (
+                <button key={optKey} onClick={() => { if (isLastEnabled) return; setOptions((prev) => ({ ...prev, [optKey]: !prev[optKey as keyof typeof prev] })); }}
+                  className={`px-3 py-2 text-sm font-medium rounded-lg capitalize transition-colors ${value ? "bg-accent text-white" : "border border-border bg-surface hover:bg-surface-hover"} ${isLastEnabled ? "opacity-60 cursor-not-allowed" : ""}`}>
+                  {optKey}
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex items-center gap-3">

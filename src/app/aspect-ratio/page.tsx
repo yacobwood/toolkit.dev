@@ -31,19 +31,17 @@ export default function AspectRatioCalculator() {
   const decimal = (width / height).toFixed(4);
 
   const handleWidth = (w: number) => {
+    if (locked === "width") return;
     setWidth(w);
-    if (locked === "height" && height > 0) {
-      // keep height, adjust nothing
-    } else if (ratioH > 0) {
+    if (locked !== "height" && ratioH > 0) {
       setHeight(Math.round((w / ratioW) * ratioH));
     }
   };
 
   const handleHeight = (h: number) => {
+    if (locked === "height") return;
     setHeight(h);
-    if (locked === "width" && width > 0) {
-      // keep width, adjust nothing
-    } else if (ratioW > 0) {
+    if (locked !== "width" && ratioW > 0) {
       setWidth(Math.round((h / ratioH) * ratioW));
     }
   };
@@ -69,11 +67,11 @@ export default function AspectRatioCalculator() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Width</label>
-                <input type="number" min={1} value={width} onChange={(e) => handleWidth(parseInt(e.target.value) || 1)} className="w-full p-3 rounded-lg border border-border bg-background text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent" />
+                <input type="number" min={1} value={width} onChange={(e) => handleWidth(parseInt(e.target.value) || 1)} disabled={locked === "width"} className={`w-full p-3 rounded-lg border border-border bg-background text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent ${locked === "width" ? "opacity-50 cursor-not-allowed" : ""}`} />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Height</label>
-                <input type="number" min={1} value={height} onChange={(e) => handleHeight(parseInt(e.target.value) || 1)} className="w-full p-3 rounded-lg border border-border bg-background text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent" />
+                <input type="number" min={1} value={height} onChange={(e) => handleHeight(parseInt(e.target.value) || 1)} disabled={locked === "height"} className={`w-full p-3 rounded-lg border border-border bg-background text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent ${locked === "height" ? "opacity-50 cursor-not-allowed" : ""}`} />
               </div>
             </div>
 

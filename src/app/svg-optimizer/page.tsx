@@ -69,11 +69,17 @@ export default function SvgOptimizer() {
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="rounded-xl border border-border bg-surface p-5">
             <label className="text-sm font-medium mb-2 block">Input Preview</label>
-            <div className="flex items-center justify-center p-4 bg-background rounded-lg min-h-[120px]" dangerouslySetInnerHTML={{ __html: input }} />
+            <div className="flex items-center justify-center p-4 bg-background rounded-lg min-h-[120px]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(input)}`} alt="Input SVG preview" className="max-w-full max-h-[200px]" />
+            </div>
           </div>
           <div className="rounded-xl border border-border bg-surface p-5">
             <label className="text-sm font-medium mb-2 block">Output Preview</label>
-            <div className="flex items-center justify-center p-4 bg-background rounded-lg min-h-[120px]" dangerouslySetInnerHTML={{ __html: output }} />
+            <div className="flex items-center justify-center p-4 bg-background rounded-lg min-h-[120px]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(output)}`} alt="Output SVG preview" className="max-w-full max-h-[200px]" />
+            </div>
           </div>
         </div>
       )}

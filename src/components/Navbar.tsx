@@ -15,8 +15,15 @@ export default function Navbar() {
         setMenuOpen(false);
       }
     };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   return (
@@ -37,6 +44,7 @@ export default function Navbar() {
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-2 text-muted hover:text-foreground transition-colors"
               aria-label="Toggle tools menu"
+              aria-expanded={menuOpen}
             >
               <svg
                 width="20"

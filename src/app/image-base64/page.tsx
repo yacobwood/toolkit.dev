@@ -3,14 +3,22 @@
 import { useState, useRef } from "react";
 import CopyButton from "@/components/CopyButton";
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
 export default function ImageBase64() {
   const [dataUri, setDataUri] = useState("");
   const [rawBase64, setRawBase64] = useState("");
   const [fileInfo, setFileInfo] = useState<{ name: string; size: string; type: string } | null>(null);
   const [preview, setPreview] = useState("");
+  const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (file: File) => {
+    setError("");
+    if (file.size > MAX_FILE_SIZE) {
+      setError(`File too large (${(file.size / 1048576).toFixed(1)} MB). Maximum size is 10 MB.`);
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
       const result = reader.result as string;
@@ -61,6 +69,12 @@ export default function ImageBase64() {
           <div className="text-4xl mb-3 text-muted">+</div>
           <p className="text-sm text-muted">Click to select, drag & drop, or paste an image</p>
         </div>
+
+        {error && (
+          <div className="p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm">
+            {error}
+          </div>
+        )}
 
         {preview && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

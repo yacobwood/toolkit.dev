@@ -29,6 +29,8 @@ export default function ChmodCalculator() {
     [true, false, false],
     [true, false, false],
   ]);
+  const [octalInput, setOctalInput] = useState("");
+  const [isEditingOctal, setIsEditingOctal] = useState(false);
 
   const octal = permsToOctal(perms);
   const symbolic = permsToSymbolic(perms);
@@ -40,10 +42,10 @@ export default function ChmodCalculator() {
   };
 
   const handleOctalInput = (value: string) => {
-    if (/^[0-7]{0,3}$/.test(value)) {
-      if (value.length === 3) {
-        setPerms(octalToPerms(value));
-      }
+    if (!/^[0-7]{0,3}$/.test(value)) return;
+    setOctalInput(value);
+    if (value.length === 3) {
+      setPerms(octalToPerms(value));
     }
   };
 
@@ -61,7 +63,7 @@ export default function ChmodCalculator() {
               <label className="text-sm font-medium">Octal</label>
               <CopyButton text={octal} />
             </div>
-            <input type="text" value={octal} onChange={(e) => handleOctalInput(e.target.value)} maxLength={3} className="w-full p-4 rounded-lg border border-border bg-background text-3xl font-mono text-center tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-accent" />
+            <input type="text" value={isEditingOctal ? octalInput : octal} onFocus={() => { setIsEditingOctal(true); setOctalInput(octal); }} onBlur={() => setIsEditingOctal(false)} onChange={(e) => handleOctalInput(e.target.value)} maxLength={3} className="w-full p-4 rounded-lg border border-border bg-background text-3xl font-mono text-center tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-accent" />
           </div>
           <div className="rounded-xl border border-border bg-surface p-5">
             <div className="flex items-center justify-between mb-3">

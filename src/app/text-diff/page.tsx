@@ -68,8 +68,14 @@ export default function TextDiff() {
   const [left, setLeft] = useState("");
   const [right, setRight] = useState("");
 
+  const MAX_LINES = 5000;
+  const leftLineCount = left.split("\n").length;
+  const rightLineCount = right.split("\n").length;
+  const limitExceeded = leftLineCount > MAX_LINES || rightLineCount > MAX_LINES;
+
   const diff = useMemo(() => {
     if (!left && !right) return [];
+    if (left.split("\n").length > MAX_LINES || right.split("\n").length > MAX_LINES) return [];
     return computeDiff(left, right);
   }, [left, right]);
 
@@ -111,6 +117,12 @@ export default function TextDiff() {
           />
         </div>
       </div>
+
+      {limitExceeded && (
+        <div className="mb-4 p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm">
+          Input exceeds {MAX_LINES.toLocaleString()} lines. Please reduce the input size.
+        </div>
+      )}
 
       {diff.length > 0 && (
         <>

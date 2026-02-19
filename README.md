@@ -108,4 +108,4 @@ toolkit-dev/
 
 ## License
 
-ISC
+Copyright (c) 2025 Jacob Wood. All rights reserved.
